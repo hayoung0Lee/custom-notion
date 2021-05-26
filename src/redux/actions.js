@@ -14,7 +14,9 @@ export const addPage = (pageName) => ({
   payload: { pageId: nextPageId++, pageName, blocks: [] },
 });
 
+let blockId = 0;
+
 export const addBlock = (pageId, isRoot, contents) => ({
   type: ADD_BLOCK,
-  payload: { pageId, isRoot, contents },
+  payload: { pageId, isRoot, contents, blockId: blockId++ },
 });

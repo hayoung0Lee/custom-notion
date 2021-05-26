@@ -15,3 +15,17 @@ export const getEveryPages = (state) => {
   const pageState = getPageState(state);
   return getPageList(state).map((id) => ({ ...pageState.pageById[id], id }));
 };
+
+export const getBlockState = (state) => {
+  return state.blocks;
+};
+
+export const getBlockList = (state) => {
+  const blockState = getBlockState(state);
+  return blockState ? blockState.blockIds : [];
+};
+
+export const getBlockContents = (state) => {
+  const blockState = getBlockState(state);
+  return getBlockList(state).map((id) => ({ ...blockState.blockById[id], id }));
+};

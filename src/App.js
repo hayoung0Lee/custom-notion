@@ -5,7 +5,7 @@ function App() {
   return (
     <div className="grid grid-cols-12">
       <Nav />
-      <Main />
+      <Main pageId={0} />
     </div>
   );
 }
