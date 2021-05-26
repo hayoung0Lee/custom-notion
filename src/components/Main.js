@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { addBlock } from "../redux/actions";
 
 const Main = () => {
   const [input, setInput] = useState("");
