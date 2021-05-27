@@ -1,7 +1,7 @@
 import ContentEditable from "react-contenteditable";
 import { useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getCurrentBlockInfo } from "../redux/selectors";
+import { getBlockState, getCurrentBlockInfo } from "../redux/selectors";
 import { updateCurrentBlock } from "../redux/actions";
 
 const EditableBlock = ({ blockId, addBlock }) => {
@@ -9,12 +9,15 @@ const EditableBlock = ({ blockId, addBlock }) => {
   const blockInfo = useSelector((state) => getCurrentBlockInfo(state, blockId));
   const ref = useRef();
 
+  console.log(blockInfo);
   const [blockValue, setBlockValue] = useState(blockInfo.contents);
 
   const onKeyDownHandler = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      addBlock(ref);
+      if (addBlock) {
+        addBlock(ref);
+      }
     }
   };
 
@@ -25,14 +28,23 @@ const EditableBlock = ({ blockId, addBlock }) => {
   };
 
   return (
-    <ContentEditable
-      innerRef={ref}
-      html={blockValue}
-      disabled={false}
-      onChange={(e) => setBlockValue(e.target.value)}
-      onBlur={(e) => onBlurHandler(e)}
-      onKeyDown={(e) => onKeyDownHandler(e)}
-    />
+    <div className="m-5">
+      <ContentEditable
+        innerRef={ref}
+        html={blockValue}
+        disabled={false}
+        onChange={(e) => setBlockValue(e.target.value)}
+        onBlur={(e) => onBlurHandler(e)}
+        onKeyDown={(e) => onKeyDownHandler(e)}
+      />
+      {/* subeditable */}
+      <div className="ml-3">
+        {blockInfo.blocks.length > 0 &&
+          blockInfo.blocks.map((blockId) => {
+            return <EditableBlock blockId={blockId} key={blockId} />;
+          })}
+      </div>
+    </div>
   );
 };
 

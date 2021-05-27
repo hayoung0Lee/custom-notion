@@ -7,10 +7,16 @@ import { ADD_BLOCK, REMOVE_BLOCK, EDIT_BLOCK } from "../actionTypes";
 // }
 
 const initialState = {
-  blockIds: [0, 1],
+  blockIds: [0, 1, 2, 3, 4, 5, 6, 7],
   blockById: {
-    0: { contents: "block1", blocks: [] },
+    0: { contents: "block1", blocks: [2, 3] },
     1: { contents: "block2", blocks: [] },
+    2: { contents: "block1's nested block 2", blocks: [4, 5] },
+    3: { contents: "block1's nested block 3", blocks: [] },
+    4: { contents: "block2's nested block 4", blocks: [6, 7] },
+    5: { contents: "block2's nested block 5", blocks: [] },
+    6: { contents: "block4's nested block 6", blocks: [] },
+    7: { contents: "block4's nested block 7", blocks: [] },
   },
 };
 
