@@ -4,19 +4,25 @@ import { useSelector, useDispatch } from "react-redux";
 import { getBlockState, getCurrentBlockInfo } from "../redux/selectors";
 import { updateCurrentBlock } from "../redux/actions";
 
-const EditableBlock = ({ blockId, addBlock }) => {
+const EditableBlock = ({ pageId, isRoot, blockId, addBlock, depth }) => {
+  console.log("depth", depth);
   const dispatch = useDispatch();
   const blockInfo = useSelector((state) => getCurrentBlockInfo(state, blockId));
   const ref = useRef();
 
-  console.log(blockInfo);
   const [blockValue, setBlockValue] = useState(blockInfo.contents);
 
-  const onKeyDownHandler = (e) => {
+  const onKeyDownHandler = (e, pageId, isRoot, blockId) => {
     if (e.key === "Enter") {
       e.preventDefault();
+      console.log(
+        "pageId ? pageId : -1, isRoot, pageId ? -1 : blockId",
+        isRoot ? pageId : -1,
+        isRoot,
+        isRoot ? -1 : blockId
+      );
       if (addBlock) {
-        addBlock(ref);
+        addBlock(ref, isRoot ? pageId : -1, isRoot, isRoot ? -1 : blockId);
       }
     }
   };
@@ -28,23 +34,31 @@ const EditableBlock = ({ blockId, addBlock }) => {
   };
 
   return (
-    <div className="m-5">
+    <>
       <ContentEditable
         innerRef={ref}
         html={blockValue}
         disabled={false}
         onChange={(e) => setBlockValue(e.target.value)}
         onBlur={(e) => onBlurHandler(e)}
-        onKeyDown={(e) => onKeyDownHandler(e)}
+        onKeyDown={(e) => onKeyDownHandler(e, pageId, isRoot, blockId)}
+        className={`ml-${(depth + 1) * 3} my-5`}
       />
       {/* subeditable */}
-      <div className="ml-3">
-        {blockInfo.blocks.length > 0 &&
-          blockInfo.blocks.map((blockId) => {
-            return <EditableBlock blockId={blockId} key={blockId} />;
-          })}
-      </div>
-    </div>
+      {blockInfo.blocks.length > 0 &&
+        blockInfo.blocks.map((blockId) => {
+          return (
+            <EditableBlock
+              pageId={null}
+              isRoot={false}
+              blockId={blockId}
+              key={blockId}
+              addBlock={addBlock}
+              depth={depth + 1}
+            />
+          );
+        })}
+    </>
   );
 };
 
