@@ -1,4 +1,4 @@
-import { ADD_BLOCK, REMOVE_BLOCK, EDIT_BLOC } from "../actionTypes";
+import { ADD_BLOCK, REMOVE_BLOCK, EDIT_BLOCK } from "../actionTypes";
 // {
 // blockIds
 // blockById
@@ -41,6 +41,17 @@ const blockReducer = (state = initialState, action) => {
           },
         };
       }
+    }
+    case EDIT_BLOCK: {
+      const { blockId, updatedValue } = action.payload;
+      console.log("EditBlock", updatedValue);
+      return {
+        ...state,
+        blockById: {
+          ...state.blockById,
+          [blockId]: { ...state.blockById[blockId], contents: updatedValue },
+        },
+      };
     }
     default:
       return state;

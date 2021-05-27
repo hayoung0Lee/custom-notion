@@ -1,9 +1,15 @@
 import ContentEditable from "react-contenteditable";
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { getCurrentBlockInfo } from "../redux/selectors";
+import { updateCurrentBlock } from "../redux/actions";
 
-const EditableBlock = ({ block, addBlock }) => {
-  const [state, setState] = useState({ html: block.contents, tagName: "div" });
+const EditableBlock = ({ blockId, addBlock }) => {
+  const dispatch = useDispatch();
+  const blockInfo = useSelector((state) => getCurrentBlockInfo(state, blockId));
   const ref = useRef();
+
+  const [blockValue, setBlockValue] = useState(blockInfo.contents);
 
   const onKeyDownHandler = (e) => {
     if (e.key === "Enter") {
@@ -11,12 +17,18 @@ const EditableBlock = ({ block, addBlock }) => {
       addBlock(ref);
     }
   };
+
+  const onBlurHandler = () => {
+    dispatch(updateCurrentBlock(blockId, ref.current.innerText));
+  };
+
   return (
     <ContentEditable
       innerRef={ref}
-      html={state.html}
+      html={blockValue}
       disabled={false}
-      onChange={(e) => setState((prev) => ({ ...prev, html: e.target.value }))}
+      onChange={(e) => setBlockValue(e.target.value)}
+      onBlur={(e) => onBlurHandler(e)}
       onKeyDown={(e) => onKeyDownHandler(e)}
     />
   );

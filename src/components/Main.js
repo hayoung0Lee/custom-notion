@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { addBlock } from "../redux/actions";
-import { getThisPage } from "../redux/selectors";
+import { getRootBlocks } from "../redux/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import EditableBlock from "./EditableBlock";
 
@@ -12,8 +12,7 @@ const Main = ({ pageId }) => {
     window.history.replaceState(null, null, `pageID_${pageId}`);
   });
 
-  const currentPageData = useSelector((state) => getThisPage(state, pageId));
-  // console.log(currentPageData);
+  const rootBlock = useSelector((state) => getRootBlocks(state, pageId));
 
   const addBlockHandler = (callerRef) => {
     if (callerRef.current.nextSibling) {
@@ -25,16 +24,20 @@ const Main = ({ pageId }) => {
   };
 
   useEffect(() => {
-    if (currentPageData.blocks.length > 0) {
+    if (rootBlock.length > 0) {
       mainRef.current.lastElementChild.focus();
     }
-  }, [currentPageData.blocks]);
+  }, [rootBlock]);
 
   return (
     <main className="col-span-10 bg-pink-100 min-h-screen p-3.5" ref={mainRef}>
-      {currentPageData.blocks.map((b) => {
+      {rootBlock.map((blockId) => {
         return (
-          <EditableBlock block={b} key={b.id} addBlock={addBlockHandler} />
+          <EditableBlock
+            blockId={blockId}
+            key={blockId}
+            addBlock={addBlockHandler}
+          />
         );
       })}
     </main>
