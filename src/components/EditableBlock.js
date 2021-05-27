@@ -55,6 +55,7 @@ const EditableBlock = ({
 
   useEffect(() => {
     if (blockInfo.blocks.length > 0) {
+      // FIXME: focusing이거 제일 마지막에 되는것말고, 중간에 Block을 추가하더라도 되도록 만들어야함
       mainRef.current.lastElementChild.focus();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
