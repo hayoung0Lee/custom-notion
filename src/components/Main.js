@@ -15,14 +15,6 @@ const Main = ({ pageId }) => {
   const rootBlock = useSelector((state) => getRootBlocks(state, pageId));
 
   const addBlockHandler = (callerRef, pageId, isRoot, parentId) => {
-    console.log(
-      "AddBlockHandler",
-      callerRef.current,
-      callerRef.current.nextSibling,
-      pageId,
-      isRoot,
-      parentId
-    );
     if (callerRef.current.nextSibling) {
       // 다음 element로 focus만 잡아준다
       callerRef.current.nextSibling.focus();

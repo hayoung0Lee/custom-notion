@@ -1,4 +1,10 @@
-import { ADD_PAGE, REMOVE_PAGE, EDIT_PAGE, ADD_BLOCK } from "../actionTypes";
+import {
+  ADD_PAGE,
+  REMOVE_PAGE,
+  EDIT_PAGE,
+  ADD_BLOCK,
+  TAB_BLOCK,
+} from "../actionTypes";
 
 const initialState = {
   pageIds: [0],
@@ -26,6 +32,26 @@ const pageReducer = (state = initialState, action) => {
             [pageId]: {
               ...state.pageById[pageId],
               blocks: [...state.pageById[pageId].blocks, blockId],
+            },
+          },
+        };
+      } else {
+        return state;
+      }
+    }
+    case TAB_BLOCK: {
+      const { pageId, isRoot, previousBlockId, currentBlockId } =
+        action.payload;
+      if (isRoot) {
+        return {
+          ...state,
+          pageById: {
+            ...state.pageById,
+            [pageId]: {
+              ...state.pageById[pageId],
+              blocks: state.pageById[pageId].blocks.filter(
+                (block) => block !== currentBlockId
+              ),
             },
           },
         };

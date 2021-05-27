@@ -1,4 +1,4 @@
-import { ADD_BLOCK, REMOVE_BLOCK, EDIT_BLOCK } from "../actionTypes";
+import { ADD_BLOCK, REMOVE_BLOCK, EDIT_BLOCK, TAB_BLOCK } from "../actionTypes";
 // {
 // blockIds
 // blockById
@@ -24,6 +24,7 @@ const blockReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_BLOCK: {
       const { blockId, contents, isRoot, parentId } = action.payload;
+      console.log("AddBlock", blockId, contents, isRoot, parentId);
       if (isRoot) {
         return {
           ...state,
@@ -50,7 +51,6 @@ const blockReducer = (state = initialState, action) => {
     }
     case EDIT_BLOCK: {
       const { blockId, updatedValue } = action.payload;
-      console.log("EditBlock", updatedValue);
       return {
         ...state,
         blockById: {
@@ -58,6 +58,27 @@ const blockReducer = (state = initialState, action) => {
           [blockId]: { ...state.blockById[blockId], contents: updatedValue },
         },
       };
+    }
+    case TAB_BLOCK: {
+      const { pageId, isRoot, previousBlockId, currentBlockId } =
+        action.payload;
+      console.log(pageId, isRoot, previousBlockId, currentBlockId);
+      if (isRoot) {
+        return {
+          ...state,
+          blockById: {
+            ...state.blockById,
+            [previousBlockId]: {
+              ...state.blockById[previousBlockId],
+              blocks: [
+                ...state.blockById[previousBlockId].blocks,
+                currentBlockId,
+              ],
+            },
+          },
+        };
+      }
+      return state;
     }
     default:
       return state;

@@ -6,6 +6,7 @@ import {
   REMOVE_BLOCK,
   EDIT_BLOCk,
   EDIT_BLOCK,
+  TAB_BLOCK,
 } from "./actionTypes";
 
 let nextPageId = 1;
@@ -25,4 +26,14 @@ export const addBlock = (pageId, isRoot, contents, parentId) => ({
 export const updateCurrentBlock = (blockId, updatedValue) => ({
   type: EDIT_BLOCK,
   payload: { blockId, updatedValue },
+});
+
+export const addTab = (pageId, isRoot, previousBlockId, currentBlockId) => ({
+  type: TAB_BLOCK,
+  payload: {
+    pageId,
+    isRoot,
+    previousBlockId,
+    currentBlockId,
+  },
 });
