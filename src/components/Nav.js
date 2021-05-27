@@ -11,15 +11,24 @@ const Nav = () => {
   };
 
   return (
-    <nav className="col-span-3 bg-red-100 min-h-screen">
-      <button onClick={handlePage}>Add Page</button>
+    <nav className="col-span-2 min-h-screen bg-gray-100">
+      <h1 className="text-lg m-2.5 text-center">Hayoung's Custom Notion</h1>
       {pages.map((p, index) => {
         return (
-          <div key={index}>
+          <div
+            key={index}
+            className="w-full p-2.5 text-center hover:bg-gray-400"
+          >
             {p.pageName} {index}
           </div>
         );
       })}
+      <button
+        className="w-full p-2.5 shadow-sm hover:shadow-md hover:bg-gray-400"
+        onClick={handlePage}
+      >
+        + Add a page
+      </button>
     </nav>
   );
 };
