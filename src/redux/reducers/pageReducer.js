@@ -1,8 +1,8 @@
 import { ADD_PAGE, REMOVE_PAGE, EDIT_PAGE, ADD_BLOCK } from "../actionTypes";
 
 const initialState = {
-  pageIds: [],
-  pageById: {},
+  pageIds: [0],
+  pageById: { 0: { pageName: "Intro Page", blocks: [] } },
 };
 
 const pageReducer = (state = initialState, action) => {

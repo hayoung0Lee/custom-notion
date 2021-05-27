@@ -7,7 +7,7 @@ import {
   EDIT_BLOC,
 } from "./actionTypes";
 
-let nextPageId = 0;
+let nextPageId = 1;
 
 export const addPage = (pageName) => ({
   type: ADD_PAGE,
