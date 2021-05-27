@@ -23,8 +23,8 @@ const initialState = {
 const blockReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_BLOCK: {
-      const { blockId, contents, isRoot, parentId } = action.payload;
-      console.log("AddBlock", blockId, contents, isRoot, parentId);
+      const { blockId, contents, isRoot, parentId, groupParent } =
+        action.payload;
       if (isRoot) {
         return {
           ...state,
@@ -40,9 +40,9 @@ const blockReducer = (state = initialState, action) => {
           blockIds: [...state.blockIds, blockId],
           blockById: {
             ...state.blockById,
-            [parentId]: {
-              ...state.blockById[parentId],
-              blocks: [...state.blockById[parentId].blocks, blockId],
+            [groupParent]: {
+              ...state.blockById[groupParent],
+              blocks: [...state.blockById[groupParent].blocks, blockId],
             },
             [blockId]: { contents, blocks: [] },
           },
@@ -62,7 +62,6 @@ const blockReducer = (state = initialState, action) => {
     case TAB_BLOCK: {
       const { pageId, isRoot, previousBlockId, currentBlockId } =
         action.payload;
-      console.log(pageId, isRoot, previousBlockId, currentBlockId);
       if (isRoot) {
         return {
           ...state,
@@ -77,8 +76,10 @@ const blockReducer = (state = initialState, action) => {
             },
           },
         };
+      } else {
+        // FIXME Tab한번 더 되게
+        return state;
       }
-      return state;
     }
     default:
       return state;

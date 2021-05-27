@@ -18,9 +18,16 @@ export const addPage = (pageName) => ({
 
 let blockId = 8;
 
-export const addBlock = (pageId, isRoot, contents, parentId) => ({
+export const addBlock = (pageId, isRoot, contents, parentId, groupParent) => ({
   type: ADD_BLOCK,
-  payload: { pageId, isRoot, contents, blockId: blockId++, parentId },
+  payload: {
+    pageId,
+    isRoot,
+    contents,
+    blockId: blockId++,
+    parentId,
+    groupParent,
+  },
 });
 
 export const updateCurrentBlock = (blockId, updatedValue) => ({

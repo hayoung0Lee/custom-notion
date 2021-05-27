@@ -14,13 +14,19 @@ const Main = ({ pageId }) => {
 
   const rootBlock = useSelector((state) => getRootBlocks(state, pageId));
 
-  const addBlockHandler = (callerRef, pageId, isRoot, parentId) => {
+  const addBlockHandler = (
+    callerRef,
+    pageId,
+    isRoot,
+    parentId,
+    groupParent
+  ) => {
     if (callerRef.current.nextSibling) {
       // 다음 element로 focus만 잡아준다
       callerRef.current.nextSibling.focus();
     } else {
       // dispatch(addBlock(pageId, true, "", -1));
-      dispatch(addBlock(pageId, isRoot, "", parentId));
+      dispatch(addBlock(pageId, isRoot, "", parentId, groupParent));
     }
   };
 
@@ -41,6 +47,7 @@ const Main = ({ pageId }) => {
             key={blockId}
             addBlock={addBlockHandler}
             depth={0}
+            mainRef={mainRef}
           />
         );
       })}

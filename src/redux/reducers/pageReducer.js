@@ -56,6 +56,7 @@ const pageReducer = (state = initialState, action) => {
           },
         };
       } else {
+        // FIXME Tab한번 더 되게
         return state;
       }
     }
