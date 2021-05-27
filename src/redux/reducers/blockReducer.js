@@ -7,8 +7,11 @@ import { ADD_BLOCK, REMOVE_BLOCK, EDIT_BLOC } from "../actionTypes";
 // }
 
 const initialState = {
-  blockIds: [],
-  blockById: {},
+  blockIds: [0, 1],
+  blockById: {
+    0: { contents: "block1", blocks: [] },
+    1: { contents: "block2", blocks: [] },
+  },
 };
 
 const blockReducer = (state = initialState, action) => {

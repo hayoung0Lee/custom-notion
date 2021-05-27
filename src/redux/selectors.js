@@ -29,3 +29,16 @@ export const getBlockContents = (state) => {
   const blockState = getBlockState(state);
   return getBlockList(state).map((id) => ({ ...blockState.blockById[id], id }));
 };
+
+export const getThisPage = (state, pageId) => {
+  const pageState = getPageState(state);
+  const currentPageData = pageState.pageById[pageId];
+  const currentPageDataWithBlockData = {
+    ...currentPageData,
+    blocks: currentPageData.blocks.map((id) => ({
+      id,
+      ...state.blocks.blockById[id],
+    })),
+  };
+  return currentPageDataWithBlockData;
+};
