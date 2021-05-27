@@ -14,7 +14,7 @@ export const addPage = (pageName) => ({
   payload: { pageId: nextPageId++, pageName, blocks: [] },
 });
 
-let blockId = 0;
+let blockId = 2;
 
 export const addBlock = (pageId, isRoot, contents, parentId) => ({
   type: ADD_BLOCK,
