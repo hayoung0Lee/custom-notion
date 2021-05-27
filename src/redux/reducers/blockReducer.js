@@ -13,14 +13,32 @@ const initialState = {
 
 const blockReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_BLOCK:
-      const { blockId, isRoot, contents } = action.payload;
-      // TODO: 중첩될수 있도록 구조화
-      return {
-        ...state,
-        blockIds: [...state.blockIds, blockId],
-        blockById: { ...state.blockById, [blockId]: { contents } },
-      };
+    case ADD_BLOCK: {
+      const { blockId, contents, isRoot, parentId } = action.payload;
+      if (isRoot) {
+        return {
+          ...state,
+          blockIds: [...state.blockIds, blockId],
+          blockById: {
+            ...state.blockById,
+            [blockId]: { contents, blocks: [] },
+          },
+        };
+      } else {
+        return {
+          ...state,
+          blockIds: [...state.blockIds, blockId],
+          blockById: {
+            ...state.blockById,
+            [parentId]: {
+              ...state.blockById[parentId],
+              blocks: [...state.blockById[parentId].blocks, blockId],
+            },
+            [blockId]: { contents, blocks: [] },
+          },
+        };
+      }
+    }
     default:
       return state;
   }

@@ -1,4 +1,4 @@
-import { ADD_PAGE, REMOVE_PAGE, EDIT_PAGE } from "../actionTypes";
+import { ADD_PAGE, REMOVE_PAGE, EDIT_PAGE, ADD_BLOCK } from "../actionTypes";
 
 const initialState = {
   pageIds: [],
@@ -7,14 +7,32 @@ const initialState = {
 
 const pageReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_PAGE:
+    case ADD_PAGE: {
       const { pageId, pageName } = action.payload;
       return {
         ...state,
         pageIds: [...state.pageIds, pageId],
         pageById: { ...state.pageById, [pageId]: { pageName, blocks: [] } },
       };
-
+    }
+    case ADD_BLOCK: {
+      const { pageId, blockId, isRoot } = action.payload;
+      // root일때는 page에 넣어준다.
+      if (isRoot) {
+        return {
+          ...state,
+          pageById: {
+            ...state.pageById,
+            [pageId]: {
+              ...state.pageById[pageId],
+              blocks: [...state.pageById[pageId].blocks, blockId],
+            },
+          },
+        };
+      } else {
+        return state;
+      }
+    }
     default:
       return state;
   }
