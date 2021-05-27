@@ -19,7 +19,9 @@ const EditableBlock = ({ blockId, addBlock }) => {
   };
 
   const onBlurHandler = () => {
-    dispatch(updateCurrentBlock(blockId, ref.current.innerText));
+    if (blockInfo.contents.trim() !== ref.current.innerText.trim()) {
+      dispatch(updateCurrentBlock(blockId, ref.current.innerText));
+    }
   };
 
   return (
