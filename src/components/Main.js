@@ -91,6 +91,7 @@ const Main = ({ pageId }) => {
                           blockId={blockId} // 현재의 blockId
                           parentId={-1} // -1은 root에서 호출했다는 뜻
                           isLast={index === rootBlock.length - 1} // 한 loop의 마지막 노드에는 일단 마지막일지도 모르니까 isLast를 true로 넘긴다.
+                          forHandle={{ ...provided.dragHandleProps }}
                         />
                       </div>
                     )}

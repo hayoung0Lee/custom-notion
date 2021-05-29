@@ -13,6 +13,7 @@ const EditableBlock = ({
   blockId, // 현재의 blockId
   parentId, // 어디에서 현재 블록을 호출했는지를 체크한다, -1은 root에서 불렀단 것
   isLast, //  한 loop의 마지막 노드에는 일단 마지막일지도 모르니까 isLast를 true로 넘긴다.
+  forHandle,
 }) => {
   const dispatch = useDispatch();
   const blockInfo = useSelector((state) => getCurrentBlockInfo(state, blockId));
@@ -105,16 +106,19 @@ const EditableBlock = ({
         <ContentEditable
           innerRef={ref}
           html={blockValue}
-          disabled={true}
+          disabled={false}
           onChange={(e) => setBlockValue(e.target.value)}
           onKeyDown={(e) => onKeyDownHandler(e, pageId, blockId, depth)}
           onBlur={(e) => onBlurHandler(e)}
           className={`w-full p-2 rounded-md hover:bg-gray-100`}
           tabIndex="-1"
         />
-        <button className="focus:outline-none" onClick={() => {}}>
+        <span
+          {...forHandle}
+          className="w-8 block hover:bg-gray-400 flex justify-center align-center"
+        >
           <img src={Dot} className="dot" alt="logo" width="10px" />
-        </button>
+        </span>
       </div>
       {/* subeditable */}
       {blockInfo.blocks.length > 0 && (
