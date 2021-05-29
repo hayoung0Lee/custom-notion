@@ -17,15 +17,32 @@ const EditableBlock = ({
   const blockInfo = useSelector((state) => getCurrentBlockInfo(state, blockId));
   const ref = useRef();
 
+  const [firstLoaded, setFirstLoaded] = useState(false);
+
   const [blockValue, setBlockValue] = useState(blockInfo.contents);
   const { pageId } = useContext(MainStore);
 
   useEffect(() => {
     // isLast === true이면 마지막일지도 모르는것
+
     if (isLast && blockInfo.blocks.length === 0) {
       ref.current.focus();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (firstLoaded === false) {
+      setFirstLoaded(true); // 첫번째 로드되었다고 체크
+    } else {
+      // 다 로드된 상태
+      // 새로 뭔가 blockInfo의 길이에 변화가 있다면 마지막 원소에 체크해주기
+      if (ref.current.nextSibling) {
+        ref.current.nextSibling.lastChild.firstChild.focus();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [blockInfo.blocks]);
 
   const onKeyDownHandler = (e, pageId, blockId) => {
     if (e.key === "Enter") {
@@ -43,6 +60,12 @@ const EditableBlock = ({
     }
   };
 
+  const onBlurHandler = () => {
+    if (blockInfo.contents.trim() !== ref.current.innerText.trim()) {
+      dispatch(updateCurrentBlock(blockId, ref.current.innerText));
+    }
+  };
+
   return (
     <div data-block-id={blockId} data-parent-id={parentId}>
       <ContentEditable
@@ -51,6 +74,7 @@ const EditableBlock = ({
         disabled={false}
         onChange={(e) => setBlockValue(e.target.value)}
         onKeyDown={(e) => onKeyDownHandler(e, pageId, blockId)}
+        onBlur={(e) => onBlurHandler(e)}
         className={`my-5 p-2 w-3/4 hover:bg-gray-100`}
         tabIndex="-1"
       />
