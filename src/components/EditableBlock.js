@@ -7,6 +7,7 @@ import { addTab } from "../redux/actions";
 import { addBlock } from "../redux/actions";
 import MainStore from "../utils/store";
 import Dot from "../dot.svg";
+import { Droppable, Draggable } from "react-beautiful-dnd";
 
 const EditableBlock = ({
   depth, // tab횟수 제한용
@@ -122,21 +123,43 @@ const EditableBlock = ({
       </div>
       {/* subeditable */}
       {blockInfo.blocks.length > 0 && (
-        <div className="ml-7" data-parent-id={blockId}>
-          {blockInfo.blocks.map((subBlockId, index) => {
-            return (
-              <EditableBlock
-                key={subBlockId}
-                blockId={subBlockId}
-                parentId={blockId}
-                depth={depth + 1}
-                isLast={
-                  isLast === true && index === blockInfo.blocks.length - 1
-                } // 마지막일지도 모르는 중에서도 마지막인것들한테만 true를 넘겨준다
-              />
-            );
-          })}
-        </div>
+        <Droppable droppableId={`droppable${blockId}`} type={`${blockId}`}>
+          {(provided, snapshot) => (
+            <div
+              className="ml-7"
+              data-parent-id={blockId}
+              ref={provided.innerRef}
+            >
+              {blockInfo.blocks.map((subBlockId, index) => {
+                return (
+                  <Draggable
+                    key={`${blockId}_${subBlockId}`}
+                    draggableId={`${blockId}_${subBlockId}`}
+                    index={index}
+                  >
+                    {(provided, snapshot) => (
+                      <div ref={provided.innerRef} {...provided.draggableProps}>
+                        {/* <span {...provided.dragHandleProps}>Btn</span> */}
+                        <EditableBlock
+                          key={subBlockId}
+                          blockId={subBlockId}
+                          parentId={blockId}
+                          depth={depth + 1}
+                          isLast={
+                            isLast === true &&
+                            index === blockInfo.blocks.length - 1
+                          } // 마지막일지도 모르는 중에서도 마지막인것들한테만 true를 넘겨준다
+                          forHandle={{ ...provided.dragHandleProps }}
+                        />
+                      </div>
+                    )}
+                  </Draggable>
+                );
+              })}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
       )}
     </div>
   );

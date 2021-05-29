@@ -45,18 +45,20 @@ const Main = ({ pageId }) => {
       return;
     }
 
-    const items = reorder(
-      rootBlock,
-      result.source.index,
-      result.destination.index
-    );
+    // +result.type: 부모 번호, +result.draggableId
+    console.log("result", result);
+    // const items = reorder(
+    //   rootBlock,
+    //   result.source.index,
+    //   result.destination.index
+    // );
 
-    for (let i = 0; i < items.length; i++) {
-      if (items[i] !== rootBlock) {
-        dispatch(updateOrder(pageId, items));
-        return;
-      }
-    }
+    // for (let i = 0; i < items.length; i++) {
+    //   if (items[i] !== rootBlock) {
+    //     dispatch(updateOrder(pageId, items));
+    //     return;
+    //   }
+    // }
   };
 
   return (
@@ -68,7 +70,7 @@ const Main = ({ pageId }) => {
       }}
     >
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="droppable">
+        <Droppable droppableId={`droppable`} type={`-1`}>
           {(provided, snapshot) => (
             <main
               className="col-span-10 bg-pink-100 min-h-screen p-10"
