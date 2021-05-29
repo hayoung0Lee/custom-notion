@@ -53,3 +53,25 @@ export const getCurrentBlockInfo = (state, blockId) => {
   const blockState = getBlockState(state);
   return blockState.blockById[blockId] ? blockState.blockById[blockId] : {};
 };
+
+export const getBlockOrder = (state, pageId) => {
+  const orderedList = [];
+  const recursive = (blockList) => {
+    for (let i = 0; i < blockList.length; i++) {
+      orderedList.push(blockList[i]);
+      const getSubBlock = getCurrentBlockInfo(state, blockList[i]).blocks;
+      if (getSubBlock.length > 0) {
+        recursive(getSubBlock);
+      }
+    }
+  };
+
+  recursive(getPageState(state).pageById[pageId].blocks);
+
+  const toIndex = new Map();
+  for (let i = 0; i < orderedList.length; i++) {
+    toIndex.set(orderedList[i], i);
+  }
+
+  return toIndex;
+};

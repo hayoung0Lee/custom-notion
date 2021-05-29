@@ -27,7 +27,6 @@ const pageReducer = (state = initialState, action) => {
         pageId,
         parentId, // -1이면 root에다 추가하는 것
         blockId, // 현재 추가될 blockId
-        contents,
       } = action.payload;
       if (parentId === -1) {
         // root에 추가
@@ -66,24 +65,14 @@ const pageReducer = (state = initialState, action) => {
       }
     }
     case REORDER_BLOCK: {
-      const { pageId, a, b } = action.payload;
+      const { pageId, orders } = action.payload;
       return {
         ...state,
         pageById: {
           ...state.pageById,
           [pageId]: {
             ...state.pageById[pageId],
-            blocks: state.pageById[pageId].blocks.map((block) => {
-              if (block !== a.blockId && block !== b.blockId) {
-                return block;
-              }
-              if (block === a.blockId) {
-                return b.blockId;
-              }
-              if (block === b.blockId) {
-                return a.blockId;
-              }
-            }),
+            blocks: [...orders],
           },
         },
       };

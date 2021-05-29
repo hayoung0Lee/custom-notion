@@ -44,11 +44,10 @@ export const addTab = (pageId, targetBlockId, currentBlockId, parentId) => ({
   },
 });
 
-export const updateOrder = (pageId, a, b) => ({
+export const updateOrder = (pageId, orders) => ({
   type: REORDER_BLOCK,
   payload: {
     pageId,
-    a,
-    b,
+    orders,
   },
 });
