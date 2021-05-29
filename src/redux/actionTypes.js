@@ -8,3 +8,4 @@ export const ADD_BLOCK = "ADD_BLOCK";
 export const REMOVE_BLOCK = "REMOVE_BLOCK";
 export const EDIT_BLOCK = "EDIT_BLOCK";
 export const TAB_BLOCK = "TAB_BLOCK";
+export const REORDER_BLOCK = "REORDER_BLOCK";

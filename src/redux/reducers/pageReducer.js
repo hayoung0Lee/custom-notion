@@ -4,11 +4,12 @@ import {
   EDIT_PAGE,
   ADD_BLOCK,
   TAB_BLOCK,
+  REORDER_BLOCK,
 } from "../actionTypes";
 
 const initialState = {
   pageIds: [0],
-  pageById: { 0: { pageName: "Intro Page", blocks: [0, 1] } },
+  pageById: { 0: { pageName: "Intro Page", blocks: [0, 1, 8] } },
 };
 
 const pageReducer = (state = initialState, action) => {
@@ -63,6 +64,29 @@ const pageReducer = (state = initialState, action) => {
       } else {
         return state;
       }
+    }
+    case REORDER_BLOCK: {
+      const { pageId, a, b } = action.payload;
+      return {
+        ...state,
+        pageById: {
+          ...state.pageById,
+          [pageId]: {
+            ...state.pageById[pageId],
+            blocks: state.pageById[pageId].blocks.map((block) => {
+              if (block !== a.blockId && block !== b.blockId) {
+                return block;
+              }
+              if (block === a.blockId) {
+                return b.blockId;
+              }
+              if (block === b.blockId) {
+                return a.blockId;
+              }
+            }),
+          },
+        },
+      };
     }
     default:
       return state;

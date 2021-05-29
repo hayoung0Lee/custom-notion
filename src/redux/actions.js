@@ -7,6 +7,7 @@ import {
   EDIT_BLOCk,
   EDIT_BLOCK,
   TAB_BLOCK,
+  REORDER_BLOCK,
 } from "./actionTypes";
 
 let nextPageId = 1;
@@ -16,7 +17,7 @@ export const addPage = (pageName) => ({
   payload: { pageId: nextPageId++, pageName, blocks: [] },
 });
 
-let blockId = 8;
+let blockId = 9;
 
 export const addBlock = (pageId, parentId, contents) => ({
   type: ADD_BLOCK,
@@ -40,5 +41,14 @@ export const addTab = (pageId, targetBlockId, currentBlockId, parentId) => ({
     targetBlockId,
     currentBlockId,
     parentId, // // -1이면 root에 있던 block임
+  },
+});
+
+export const updateOrder = (pageId, a, b) => ({
+  type: REORDER_BLOCK,
+  payload: {
+    pageId,
+    a,
+    b,
   },
 });
