@@ -37,7 +37,7 @@ const Main = ({ pageId }) => {
   });
 
   const rootBlock = useSelector((state) => getRootBlocks(state, pageId));
-  const [currentOrder, updateOrder] = useState([0, 1, 8]);
+  const dispatch = useDispatch();
 
   const onDragEnd = (result) => {
     // dropped outside the list
@@ -46,13 +46,17 @@ const Main = ({ pageId }) => {
     }
 
     const items = reorder(
-      currentOrder,
+      rootBlock,
       result.source.index,
       result.destination.index
     );
 
-    console.log(items);
-    updateOrder(items);
+    for (let i = 0; i < items.length; i++) {
+      if (items[i] !== rootBlock) {
+        dispatch(updateOrder(pageId, items));
+        return;
+      }
+    }
   };
 
   return (
@@ -72,7 +76,7 @@ const Main = ({ pageId }) => {
               ref={provided.innerRef}
               style={getListStyle(snapshot.isDraggingOver)}
             >
-              {currentOrder.map((blockId, index) => {
+              {rootBlock.map((blockId, index) => {
                 return (
                   <Draggable key={index} draggableId={`${index}`} index={index}>
                     {(provided, snapshot) => (
