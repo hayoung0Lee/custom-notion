@@ -105,7 +105,7 @@ const EditableBlock = ({
         <ContentEditable
           innerRef={ref}
           html={blockValue}
-          disabled={false}
+          disabled={true}
           onChange={(e) => setBlockValue(e.target.value)}
           onKeyDown={(e) => onKeyDownHandler(e, pageId, blockId, depth)}
           onBlur={(e) => onBlurHandler(e)}

@@ -14,25 +14,19 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-const grid = 8;
-
 const getItemStyle = (isDragging, draggableStyle) => ({
   // some basic styles to make the items look a bit nicer
   userSelect: "none",
-  padding: grid * 2,
-  margin: `0 0 ${grid}px 0`,
 
   // change background colour if dragging
-  background: isDragging ? "lightgreen" : "grey",
+  background: isDragging ? "lightgreen" : null,
 
   // styles we need to apply on draggables
   ...draggableStyle,
 });
 
 const getListStyle = (isDraggingOver) => ({
-  background: isDraggingOver ? "lightblue" : "lightgrey",
-  padding: grid,
-  width: 250,
+  // background: isDraggingOver ? "lightblue" : null,
 });
 
 const Main = ({ pageId }) => {
@@ -91,14 +85,13 @@ const Main = ({ pageId }) => {
                           provided.draggableProps.style
                         )}
                       >
-                        {/* <EditableBlock
+                        <EditableBlock
                           key={blockId}
                           depth={1} // tab횟수 제한용
                           blockId={blockId} // 현재의 blockId
                           parentId={-1} // -1은 root에서 호출했다는 뜻
                           isLast={index === rootBlock.length - 1} // 한 loop의 마지막 노드에는 일단 마지막일지도 모르니까 isLast를 true로 넘긴다.
-                        /> */}
-                        {blockId}
+                        />
                       </div>
                     )}
                   </Draggable>
