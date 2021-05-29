@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { getBlockState, getCurrentBlockInfo } from "../redux/selectors";
 import { updateCurrentBlock } from "../redux/actions";
 import { addTab } from "../redux/actions";
+import { addBlock } from "../redux/actions";
+import MainStore from "../utils/store";
 
 const EditableBlock = ({
   depth, // tab횟수 제한용
@@ -16,6 +18,7 @@ const EditableBlock = ({
   const ref = useRef();
 
   const [blockValue, setBlockValue] = useState(blockInfo.contents);
+  const { pageId } = useContext(MainStore);
 
   useEffect(() => {
     // isLast === true이면 마지막일지도 모르는것
@@ -24,6 +27,22 @@ const EditableBlock = ({
     }
   }, []);
 
+  const onKeyDownHandler = (e, pageId, blockId) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      // ref.current.nextSibiling가 있다는건 subBlocks가 있다는 것
+      if (ref.current.nextSibling) {
+        ref.current.nextSibling.firstChild.firstChild.focus();
+      } else if (ref.current.parentElement.nextSibling) {
+        // 부모의 nextSibling이 있다는건, 형재 노드가 있다는 것
+        ref.current.parentElement.nextSibling.firstChild.focus();
+      } else {
+        // console.log("끝까지 다 들어온것, subBlock도 형제 노드도 없다");
+        dispatch(addBlock(pageId, parentId, "something")); // 형제노드로 추가됨
+      }
+    }
+  };
+
   return (
     <div data-block-id={blockId} data-parent-id={parentId}>
       <ContentEditable
@@ -31,8 +50,9 @@ const EditableBlock = ({
         html={blockValue}
         disabled={false}
         onChange={(e) => setBlockValue(e.target.value)}
+        onKeyDown={(e) => onKeyDownHandler(e, pageId, blockId)}
         className={`my-5 p-2 w-3/4 hover:bg-gray-100`}
-        tabindex="-1"
+        tabIndex="-1"
       />
       {/* subeditable */}
       {blockInfo.blocks.length > 0 && (

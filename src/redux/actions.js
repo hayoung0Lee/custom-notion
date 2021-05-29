@@ -18,15 +18,13 @@ export const addPage = (pageName) => ({
 
 let blockId = 8;
 
-export const addBlock = (pageId, isRoot, contents, parentId, groupParent) => ({
+export const addBlock = (pageId, parentId, contents) => ({
   type: ADD_BLOCK,
   payload: {
     pageId,
-    isRoot,
+    parentId, // -1이면 root에다 추가하는 것
+    blockId: blockId++, // 현재 추가될 blockId
     contents,
-    blockId: blockId++,
-    parentId,
-    groupParent,
   },
 });
 

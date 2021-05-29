@@ -22,9 +22,14 @@ const pageReducer = (state = initialState, action) => {
       };
     }
     case ADD_BLOCK: {
-      const { pageId, blockId, isRoot } = action.payload;
-      // root일때는 page에 넣어준다.
-      if (isRoot) {
+      const {
+        pageId,
+        parentId, // -1이면 root에다 추가하는 것
+        blockId, // 현재 추가될 blockId
+        contents,
+      } = action.payload;
+      if (parentId === -1) {
+        // root에 추가
         return {
           ...state,
           pageById: {

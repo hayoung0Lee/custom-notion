@@ -23,9 +23,15 @@ const initialState = {
 const blockReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_BLOCK: {
-      const { blockId, contents, isRoot, parentId, groupParent } =
-        action.payload;
-      if (isRoot) {
+      const {
+        pageId,
+        parentId, // -1이면 root에다 추가하는 것
+        blockId, // 현재 추가될 blockId
+        contents,
+      } = action.payload;
+
+      if (parentId === -1) {
+        // root에 추가
         return {
           ...state,
           blockIds: [...state.blockIds, blockId],
@@ -35,14 +41,15 @@ const blockReducer = (state = initialState, action) => {
           },
         };
       } else {
+        // 현재 parentId의 마지막 원소로 추가
         return {
           ...state,
           blockIds: [...state.blockIds, blockId],
           blockById: {
             ...state.blockById,
-            [groupParent]: {
-              ...state.blockById[groupParent],
-              blocks: [...state.blockById[groupParent].blocks, blockId],
+            [parentId]: {
+              ...state.blockById[parentId],
+              blocks: [...state.blockById[parentId].blocks, blockId],
             },
             [blockId]: { contents, blocks: [] },
           },
