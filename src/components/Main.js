@@ -13,6 +13,7 @@ const Main = ({ pageId }) => {
 
   const rootBlock = useSelector((state) => getRootBlocks(state, pageId));
 
+  // TODO: Make it draggable
   return (
     <MainStore.Provider
       value={{
