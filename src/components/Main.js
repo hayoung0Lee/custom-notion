@@ -22,10 +22,7 @@ const Main = ({ pageId }) => {
         setLastAction: setLastAction,
       }}
     >
-      <main
-        className="col-span-10 bg-pink-100 min-h-screen p-3.5"
-        ref={mainRef}
-      >
+      <main className="col-span-10 bg-pink-100 min-h-screen p-10" ref={mainRef}>
         {rootBlock.map((blockId, index) => {
           return (
             <EditableBlock
