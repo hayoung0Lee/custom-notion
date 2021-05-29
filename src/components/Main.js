@@ -6,27 +6,15 @@ import MainStore from "../utils/store";
 import { updateOrder } from "../redux/actions";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-};
-
 const getItemStyle = (isDragging, draggableStyle) => ({
   // some basic styles to make the items look a bit nicer
   userSelect: "none",
 
   // change background colour if dragging
-  background: isDragging ? "lightgreen" : null,
+  background: isDragging ? "#9CA3AF" : null,
 
   // styles we need to apply on draggables
   ...draggableStyle,
-});
-
-const getListStyle = (isDraggingOver) => ({
-  // background: isDraggingOver ? "lightblue" : null,
 });
 
 const Main = ({ pageId }) => {
@@ -45,20 +33,18 @@ const Main = ({ pageId }) => {
       return;
     }
 
-    // +result.type: 부모 번호, +result.draggableId
-    console.log("result", result);
-    // const items = reorder(
-    //   rootBlock,
-    //   result.source.index,
-    //   result.destination.index
-    // );
+    // +result.type: 부모 번호(여기서 순서를 바꾸면된다), +result.draggableId
 
-    // for (let i = 0; i < items.length; i++) {
-    //   if (items[i] !== rootBlock) {
-    //     dispatch(updateOrder(pageId, items));
-    //     return;
-    //   }
-    // }
+    if (result.source.index === result.destination.index) {
+      return;
+    }
+
+    const ids = result.draggableId.split("_");
+    const parentId = +ids[0];
+    // const currentID = +ids[1];
+    const sourceIndex = result.source.index;
+    const destinationIndex = result.destination.index;
+    dispatch(updateOrder(pageId, parentId, sourceIndex, destinationIndex));
   };
 
   return (
@@ -73,14 +59,17 @@ const Main = ({ pageId }) => {
         <Droppable droppableId={`droppable`} type={`-1`}>
           {(provided, snapshot) => (
             <main
-              className="col-span-10 bg-pink-100 min-h-screen p-10"
+              className="col-span-10 bg-indigo-50 min-h-screen p-10"
               {...provided.droppableProps}
               ref={provided.innerRef}
-              style={getListStyle(snapshot.isDraggingOver)}
             >
               {rootBlock.map((blockId, index) => {
                 return (
-                  <Draggable key={index} draggableId={`${index}`} index={index}>
+                  <Draggable
+                    key={`-1_${blockId}`}
+                    draggableId={`-1_${blockId}`}
+                    index={index}
+                  >
                     {(provided, snapshot) => (
                       <div
                         ref={provided.innerRef}

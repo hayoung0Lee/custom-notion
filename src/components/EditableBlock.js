@@ -9,6 +9,17 @@ import MainStore from "../utils/store";
 import Dot from "../dot.svg";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 
+const getItemStyle = (isDragging, draggableStyle) => ({
+  // some basic styles to make the items look a bit nicer
+  userSelect: "none",
+
+  // change background colour if dragging
+  background: isDragging ? "#D1D5DB" : null,
+
+  // styles we need to apply on draggables
+  ...draggableStyle,
+});
+
 const EditableBlock = ({
   depth, // tab횟수 제한용
   blockId, // 현재의 blockId
@@ -111,7 +122,7 @@ const EditableBlock = ({
           onChange={(e) => setBlockValue(e.target.value)}
           onKeyDown={(e) => onKeyDownHandler(e, pageId, blockId, depth)}
           onBlur={(e) => onBlurHandler(e)}
-          className={`w-full p-2 rounded-md hover:bg-gray-100`}
+          className={`w-full p-2 rounded-md hover:bg-gray-200`}
           tabIndex="-1"
         />
         <span
@@ -138,7 +149,15 @@ const EditableBlock = ({
                     index={index}
                   >
                     {(provided, snapshot) => (
-                      <div ref={provided.innerRef} {...provided.draggableProps}>
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={getItemStyle(
+                          snapshot.isDragging,
+                          provided.draggableProps.style
+                        )}
+                      >
                         {/* <span {...provided.dragHandleProps}>Btn</span> */}
                         <EditableBlock
                           key={subBlockId}

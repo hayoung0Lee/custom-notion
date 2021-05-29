@@ -65,17 +65,35 @@ const pageReducer = (state = initialState, action) => {
       }
     }
     case REORDER_BLOCK: {
-      const { pageId, orders } = action.payload;
-      return {
-        ...state,
-        pageById: {
-          ...state.pageById,
-          [pageId]: {
-            ...state.pageById[pageId],
-            blocks: [...orders],
+      const { pageId, parentId, sourceIndex, destinationIndex } =
+        action.payload;
+      const a = state.pageById[pageId].blocks[sourceIndex];
+      const b = state.pageById[pageId].blocks[destinationIndex];
+
+      if (parentId === -1) {
+        return {
+          ...state,
+          pageById: {
+            ...state.pageById,
+            [pageId]: {
+              ...state.pageById[pageId],
+              blocks: state.pageById[pageId].blocks.map((block, index) => {
+                if (index !== sourceIndex && index !== destinationIndex) {
+                  return block;
+                }
+
+                if (index === sourceIndex) {
+                  return b;
+                }
+
+                return a;
+              }),
+            },
           },
-        },
-      };
+        };
+      } else {
+        return state;
+      }
     }
     default:
       return state;

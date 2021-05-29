@@ -1,4 +1,10 @@
-import { ADD_BLOCK, REMOVE_BLOCK, EDIT_BLOCK, TAB_BLOCK } from "../actionTypes";
+import {
+  ADD_BLOCK,
+  REMOVE_BLOCK,
+  EDIT_BLOCK,
+  TAB_BLOCK,
+  REORDER_BLOCK,
+} from "../actionTypes";
 // {
 // blockIds
 // blockById
@@ -101,6 +107,36 @@ const blockReducer = (state = initialState, action) => {
                 ...state.blockById[targetBlockId].blocks,
                 currentBlockId,
               ],
+            },
+          },
+        };
+      }
+    }
+    case REORDER_BLOCK: {
+      const { pageId, parentId, sourceIndex, destinationIndex } =
+        action.payload;
+
+      const a = state.blockById[parentId]?.blocks[sourceIndex];
+      const b = state.blockById[parentId]?.blocks[destinationIndex];
+
+      if (parentId === -1 || !a || !b) {
+        return state;
+      } else {
+        return {
+          ...state,
+          blockById: {
+            ...state.blockById,
+            [parentId]: {
+              ...state.blockById[parentId],
+              blocks: state.blockById[parentId].blocks.map((block, index) => {
+                if (index !== sourceIndex && index !== destinationIndex) {
+                  return block;
+                }
+                if (index === sourceIndex) {
+                  return b;
+                }
+                return a;
+              }),
             },
           },
         };

@@ -11,7 +11,7 @@ const Nav = () => {
   };
 
   return (
-    <nav className="col-span-2 min-h-screen bg-gray-100">
+    <nav className="col-span-2 min-h-screen bg-indigo-100">
       <h1 className="text-lg m-2.5 text-center">Hayoung's Custom Notion</h1>
       {pages.map((p, index) => {
         return (
