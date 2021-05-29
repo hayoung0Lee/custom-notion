@@ -67,25 +67,42 @@ const blockReducer = (state = initialState, action) => {
       };
     }
     case TAB_BLOCK: {
-      const { pageId, isRoot, previousBlockId, currentBlockId } =
+      const { pageId, targetBlockId, currentBlockId, parentId } =
         action.payload;
-      if (isRoot) {
+      if (parentId === -1) {
         return {
           ...state,
           blockById: {
             ...state.blockById,
-            [previousBlockId]: {
-              ...state.blockById[previousBlockId],
+            [targetBlockId]: {
+              ...state.blockById[targetBlockId],
               blocks: [
-                ...state.blockById[previousBlockId].blocks,
+                ...state.blockById[targetBlockId].blocks,
                 currentBlockId,
               ],
             },
           },
         };
       } else {
-        // FIXME Tab한번 더 되게
-        return state;
+        return {
+          ...state,
+          blockById: {
+            ...state.blockById,
+            [parentId]: {
+              ...state.blockById[parentId],
+              blocks: state.blockById[parentId].blocks.filter(
+                (b) => b !== currentBlockId
+              ),
+            },
+            [targetBlockId]: {
+              ...state.blockById[targetBlockId],
+              blocks: [
+                ...state.blockById[targetBlockId].blocks,
+                currentBlockId,
+              ],
+            },
+          },
+        };
       }
     }
     default:

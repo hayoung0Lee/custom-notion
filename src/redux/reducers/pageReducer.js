@@ -45,9 +45,9 @@ const pageReducer = (state = initialState, action) => {
       }
     }
     case TAB_BLOCK: {
-      const { pageId, isRoot, previousBlockId, currentBlockId } =
+      const { pageId, targetBlockId, currentBlockId, parentId } =
         action.payload;
-      if (isRoot) {
+      if (parentId === -1) {
         return {
           ...state,
           pageById: {
@@ -61,7 +61,6 @@ const pageReducer = (state = initialState, action) => {
           },
         };
       } else {
-        // FIXME Tab한번 더 되게
         return state;
       }
     }

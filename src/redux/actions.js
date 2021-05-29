@@ -33,12 +33,12 @@ export const updateCurrentBlock = (blockId, updatedValue) => ({
   payload: { blockId, updatedValue },
 });
 
-export const addTab = (pageId, isRoot, previousBlockId, currentBlockId) => ({
+export const addTab = (pageId, targetBlockId, currentBlockId, parentId) => ({
   type: TAB_BLOCK,
   payload: {
     pageId,
-    isRoot,
-    previousBlockId,
+    targetBlockId,
     currentBlockId,
+    parentId, // // -1이면 root에 있던 block임
   },
 });

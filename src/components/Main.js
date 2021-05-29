@@ -5,19 +5,22 @@ import EditableBlock from "./EditableBlock";
 import MainStore from "../utils/store";
 
 const Main = ({ pageId }) => {
-  const dispatch = useDispatch();
   const mainRef = useRef();
-
+  const [lastAction, setLastAction] = useState({ action: "" });
   useEffect(() => {
     window.history.replaceState(null, null, `pageID_${pageId}`);
   });
 
   const rootBlock = useSelector((state) => getRootBlocks(state, pageId));
 
-  const addBlockHandler = () => {};
-
   return (
-    <MainStore.Provider value={{ pageId: pageId }}>
+    <MainStore.Provider
+      value={{
+        pageId: pageId,
+        lastAction: lastAction,
+        setLastAction: setLastAction,
+      }}
+    >
       <main
         className="col-span-10 bg-pink-100 min-h-screen p-3.5"
         ref={mainRef}
