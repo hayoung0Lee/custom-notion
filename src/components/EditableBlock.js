@@ -123,6 +123,8 @@ const EditableBlock = ({
   };
 
   const handleDelete = (e, pageId, blockId) => {
+    e.preventDefault();
+
     const target = getDomElement(blockId);
     const parentId = +target.dataset.parentId; // 나의 부모 id
 
