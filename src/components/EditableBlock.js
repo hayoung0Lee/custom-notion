@@ -17,6 +17,7 @@ import {
   getDomElement,
   focusTargetDomElement,
   getBlockIdIndex,
+  setEndOfContenteditable,
 } from "../utils/common";
 
 const EditableBlock = ({
@@ -40,6 +41,7 @@ const EditableBlock = ({
       lastAction.action === "Tab" // 마지막 action이 Tab이었으면 focus
     ) {
       ref.current.focus();
+      setEndOfContenteditable(ref.current);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -51,6 +53,7 @@ const EditableBlock = ({
       const newBlockId = blockInfo.blocks[blockInfo.blocks.length - 1];
       const target = getDomElement(newBlockId);
       target.firstChild.firstChild.focus();
+      setEndOfContenteditable(target.firstChild.firstChild);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blockInfo.blocks]);
