@@ -5,6 +5,7 @@
   - you can "Tab" to make a block indent.
   - you can drag and drop blocks using the dot button at the end of each block.
   - you can use keyboard "Up and Down" to move your focus
+  - you can delete block by pressing "Ctrl + delete"
 
 <img src="./dnd_tab_enter.gif">
 

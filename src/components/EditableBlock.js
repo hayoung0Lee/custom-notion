@@ -156,7 +156,7 @@ const EditableBlock = ({
       handleTab(e, pageId, blockId, depth);
     } else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
       handleArrow(e, blockId);
-    } else if (e.key === "Backspace") {
+    } else if (e.key === "Backspace" && e.ctrlKey) {
       handleDelete(e, pageId, blockId);
     }
   };
