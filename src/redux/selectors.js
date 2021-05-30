@@ -54,24 +54,21 @@ export const getCurrentBlockInfo = (state, blockId) => {
   return blockState.blockById[blockId] ? blockState.blockById[blockId] : {};
 };
 
+// 해당 id의 하위 블럭들을 모아서 보내준다
 export const getBlockOrder = (state, pageId) => {
-  const orderedList = [];
+  const blockToSubBlock = {};
+
   const recursive = (blockList) => {
     for (let i = 0; i < blockList.length; i++) {
-      orderedList.push(blockList[i]);
       const getSubBlock = getCurrentBlockInfo(state, blockList[i]).blocks;
+      blockToSubBlock[blockList[i]] = getSubBlock;
       if (getSubBlock.length > 0) {
         recursive(getSubBlock);
       }
     }
   };
 
-  recursive(getPageState(state).pageById[pageId].blocks);
-
-  const toIndex = new Map();
-  for (let i = 0; i < orderedList.length; i++) {
-    toIndex.set(orderedList[i], i);
-  }
-
-  return toIndex;
+  blockToSubBlock[-1] = getPageState(state).pageById[pageId].blocks;
+  recursive(blockToSubBlock[-1]);
+  return blockToSubBlock;
 };

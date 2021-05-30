@@ -1,21 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { getRootBlocks } from "../redux/selectors";
+import { getRootBlocks, getBlockOrder } from "../redux/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import EditableBlock from "./EditableBlock";
 import MainStore from "../utils/store";
 import { updateOrder } from "../redux/actions";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-
-const getItemStyle = (isDragging, draggableStyle) => ({
-  // some basic styles to make the items look a bit nicer
-  userSelect: "none",
-
-  // change background colour if dragging
-  background: isDragging ? "#9CA3AF" : null,
-
-  // styles we need to apply on draggables
-  ...draggableStyle,
-});
+import { getItemStyle } from "../utils/common";
 
 const Main = ({ pageId }) => {
   const [lastAction, setLastAction] = useState({ action: "" });
@@ -25,6 +15,8 @@ const Main = ({ pageId }) => {
   });
 
   const rootBlock = useSelector((state) => getRootBlocks(state, pageId));
+  const getOrderedList = useSelector((state) => getBlockOrder(state, pageId));
+  console.log("getOrderedList", getOrderedList);
   const dispatch = useDispatch();
 
   const onDragEnd = (result) => {
@@ -34,7 +26,6 @@ const Main = ({ pageId }) => {
     }
 
     // +result.type: 부모 번호(여기서 순서를 바꾸면된다), +result.draggableId
-
     if (result.source.index === result.destination.index) {
       return;
     }
@@ -53,6 +44,7 @@ const Main = ({ pageId }) => {
         pageId: pageId,
         lastAction: lastAction,
         setLastAction: setLastAction,
+        getOrderedList: getOrderedList,
       }}
     >
       <DragDropContext onDragEnd={onDragEnd}>
@@ -86,6 +78,7 @@ const Main = ({ pageId }) => {
                           blockId={blockId} // 현재의 blockId
                           parentId={-1} // -1은 root에서 호출했다는 뜻
                           isLast={index === rootBlock.length - 1} // 한 loop의 마지막 노드에는 일단 마지막일지도 모르니까 isLast를 true로 넘긴다.
+                          nth={index} // 형제노드 체크할때
                           forHandle={{ ...provided.dragHandleProps }}
                         />
                       </div>
