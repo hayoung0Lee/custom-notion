@@ -4,9 +4,7 @@
   - you can add new block by "Enter" on the last element of the current sub-blocks.
   - you can tab until you reach 4 depth.
 
-<img src="./tab_enter.gif">
-
-<img src="./dnd.gif">
+<img src="./dnd_tab_enter.gif">
 
 ## blogging
 
@@ -15,6 +13,7 @@
 - [React 관련 싹훑기(9) - 중첩되게 block이 들어갈 수 있도록 구성하기 + Tab기능(아직은 two depth) + focusing](https://mytutorials.tistory.com/408)
 - [React 관련 싹훑기(10) - Enter, Tab, 블럭 에디팅 기능까지 리팩토링 완료!](https://mytutorials.tistory.com/411)
 - [React 관련 싹훑기(11) - Reordering blocks using react-beautiful-dnd](https://mytutorials.tistory.com/412)
+- [React 관련 싹훑기(12) - React-ContentEditable관련 reference가업데이트가 안되는 문제 해결](https://mytutorials.tistory.com/413)
 
 ## how to run
 
