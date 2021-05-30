@@ -31,8 +31,13 @@ const EditableBlock = ({
   const blockInfo = useSelector((state) => getCurrentBlockInfo(state, blockId));
   const ref = useRef();
   const [blockValue, setBlockValue] = useState(blockInfo.contents);
-  const { pageId, lastAction, setLastAction, orderedList } =
-    useContext(MainStore);
+  const {
+    pageId,
+    lastAction,
+    setLastAction,
+    orderedList,
+    ordersFromTopToDown,
+  } = useContext(MainStore);
 
   useEffect(() => {
     // isLast === true이면 마지막일지도 모르는것
@@ -101,11 +106,30 @@ const EditableBlock = ({
     }
   };
 
+  const handleArrow = (e, blockId) => {
+    const nth = getBlockIdIndex(ordersFromTopToDown, blockId);
+    if (e.key === "ArrowUp") {
+      // 앞에 있는데로 이동
+      if (nth > 0) {
+        const focusTarget = getDomElement(ordersFromTopToDown[nth - 1]);
+        focusTargetDomElement(focusTarget);
+      }
+    } else {
+      // 뒤로 이동
+      if (nth < ordersFromTopToDown.length - 1) {
+        const focusTarget = getDomElement(ordersFromTopToDown[nth + 1]);
+        focusTargetDomElement(focusTarget);
+      }
+    }
+  };
+
   const onKeyDownHandler = (e, pageId, blockId, depth) => {
     if (e.key === "Enter") {
       handleEnter(e, pageId, blockId);
     } else if (e.key === "Tab") {
       handleTab(e, pageId, blockId, depth);
+    } else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      handleArrow(e, blockId);
     }
   };
 

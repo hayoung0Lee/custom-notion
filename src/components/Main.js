@@ -15,7 +15,9 @@ const Main = ({ pageId }) => {
   });
 
   const rootBlock = useSelector((state) => getRootBlocks(state, pageId));
-  const orderedList = useSelector((state) => getBlockOrder(state, pageId));
+  const { blockToSubBlock, ordersFromTopToDown } = useSelector((state) =>
+    getBlockOrder(state, pageId)
+  );
 
   const dispatch = useDispatch();
 
@@ -43,7 +45,8 @@ const Main = ({ pageId }) => {
         pageId: pageId,
         lastAction: lastAction,
         setLastAction: setLastAction,
-        orderedList: orderedList,
+        orderedList: blockToSubBlock,
+        ordersFromTopToDown: ordersFromTopToDown,
       }}
     >
       <DragDropContext onDragEnd={onDragEnd}>

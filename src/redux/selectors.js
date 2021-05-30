@@ -56,14 +56,19 @@ export const getCurrentBlockInfo = (state, blockId) => {
 
 // 해당 id의 하위 블럭들을 모아서 보내준다
 const blockToSubBlock = {};
+const ordersFromTopToDown = []; // 그냥 위에서부터 순서
+
 // 이 reference로 모든 애들이 접근할거라, 얘는 그대로 고정. react-contentEditable이 콜백을 한번 렌더링하고나면 안바꾸는것 같다
 export const getBlockOrder = (state, pageId) => {
   Object.getOwnPropertyNames(blockToSubBlock).forEach(function (prop) {
     delete blockToSubBlock[prop];
   });
 
+  ordersFromTopToDown.splice(0, ordersFromTopToDown.length);
+
   const recursive = (blockList) => {
     for (let i = 0; i < blockList.length; i++) {
+      ordersFromTopToDown.push(blockList[i]);
       const getSubBlock = getCurrentBlockInfo(state, blockList[i]).blocks;
       blockToSubBlock[blockList[i]] = getSubBlock;
       if (getSubBlock.length > 0) {
@@ -74,5 +79,5 @@ export const getBlockOrder = (state, pageId) => {
 
   blockToSubBlock[-1] = getPageState(state).pageById[pageId].blocks;
   recursive(blockToSubBlock[-1]);
-  return blockToSubBlock;
+  return { blockToSubBlock, ordersFromTopToDown };
 };
