@@ -2,7 +2,8 @@
 
 - [visit my clone notion site](https://clone-notion.netlify.app)
   - you can add new block by "Enter" on the last element of the current sub-blocks.
-  - you can tab until you reach 4 depth.
+  - you can "Tab" to make a block indent.
+  - you can drag and drop blocks using the dot button at the end of each block.
 
 <img src="./dnd_tab_enter.gif">
 

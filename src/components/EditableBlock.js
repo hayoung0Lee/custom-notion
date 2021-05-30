@@ -86,11 +86,6 @@ const EditableBlock = ({
 
   const handleTab = (e, pageId, blockId, depth) => {
     e.preventDefault();
-    if (depth > 3) {
-      console.log("no more tab", depth);
-      return;
-    }
-
     const target = getDomElement(blockId);
     const itsParent = +target.dataset.parentId; // 나의 부모 id
     const nth = getBlockIdIndex(orderedList[itsParent], blockId);
