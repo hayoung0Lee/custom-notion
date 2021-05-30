@@ -102,6 +102,7 @@ const pageReducer = (state = initialState, action) => {
       if (parentId === -1) {
         return {
           ...state,
+          pageIds: state.pageIds.filter((b) => b !== blockId),
           pageById: {
             ...state.pageById,
             [pageId]: {
