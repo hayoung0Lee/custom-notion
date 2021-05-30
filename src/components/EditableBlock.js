@@ -56,12 +56,11 @@ const EditableBlock = ({
     e.preventDefault();
 
     const target = getDomElement(blockId);
-    const itsParent = target.dataset.parentId; // 나의 부모 id
+    const itsParent = +target.dataset.parentId; // 나의 부모 id
     // blockId : 나의 id
 
     // 나한테 형제가 있는지 거기로 이동
     // 없으면 enter해서 새로운 블럭 생성
-    console.log("getOrderedList[blockId]", getOrderedList[blockId], nth);
     if (getOrderedList[blockId].length > 0) {
       // 내 id밑에 subBlock이 있으면 거기로 이동
       const focusTarget = getDomElement(getOrderedList[blockId][0]);
@@ -77,36 +76,33 @@ const EditableBlock = ({
     setLastAction({ action: "Enter" });
   };
 
-  const handleTab = (e, pageId, blockId, depth) => {
+  const handleTab = (e, pageId, blockId, depth, nth) => {
     e.preventDefault();
     if (depth > 3) {
       console.log("no more tab", depth);
       return;
     }
 
+    const target = getDomElement(blockId);
+    const itsParent = +target.dataset.parentId; // 나의 부모 id
+
     // 이전 형제노드가 있을때만 가능하다
     // 있으면 갖다 옮긴다.
-    if (ref.current.parentElement.parentElement.previousSibling) {
-      const targetBlockId =
-        +ref.current.parentElement.parentElement.previousSibling.dataset
-          .blockId;
-
-      const parentId =
-        +ref.current.parentElement.parentElement.dataset.parentId;
-
-      // // 현재 pageId, 옮길대상, 현재의 blockId, 현재의 parentId,
-      dispatch(addTab(pageId, targetBlockId, blockId, parentId));
+    if (nth > 0) {
+      const previousSiblingId = getOrderedList[itsParent][nth - 1];
+      // // // 현재 pageId, 옮길대상, 현재의 blockId, 현재의 parentId,
+      dispatch(addTab(pageId, previousSiblingId, blockId, itsParent));
       setLastAction({ action: "Tab" });
     } else {
       console.log("can't tab");
     }
   };
 
-  const onKeyDownHandler = (e, pageId, blockId, depth, isLast) => {
+  const onKeyDownHandler = (e, pageId, blockId, depth, nth) => {
     if (e.key === "Enter") {
-      handleEnter(e, pageId, blockId, isLast);
+      handleEnter(e, pageId, blockId, nth);
     } else if (e.key === "Tab") {
-      handleTab(e, pageId, blockId, depth);
+      handleTab(e, pageId, blockId, depth, nth);
     }
   };
 
