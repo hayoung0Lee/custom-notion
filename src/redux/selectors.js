@@ -55,8 +55,12 @@ export const getCurrentBlockInfo = (state, blockId) => {
 };
 
 // 해당 id의 하위 블럭들을 모아서 보내준다
+const blockToSubBlock = {};
+// 이 reference로 모든 애들이 접근할거라, 얘는 그대로 고정. react-contentEditable이 콜백을 한번 렌더링하고나면 안바꾸는것 같다
 export const getBlockOrder = (state, pageId) => {
-  const blockToSubBlock = {};
+  Object.getOwnPropertyNames(blockToSubBlock).forEach(function (prop) {
+    delete blockToSubBlock[prop];
+  });
 
   const recursive = (blockList) => {
     for (let i = 0; i < blockList.length; i++) {

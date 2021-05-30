@@ -1,7 +1,11 @@
 import ContentEditable from "react-contenteditable";
 import { useRef, useState, useEffect, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getBlockState, getCurrentBlockInfo } from "../redux/selectors";
+import {
+  getBlockState,
+  getCurrentBlockInfo,
+  getBlockOrder,
+} from "../redux/selectors";
 import { updateCurrentBlock } from "../redux/actions";
 import { addTab } from "../redux/actions";
 import { addBlock } from "../redux/actions";
@@ -12,6 +16,7 @@ import {
   getItemStyle,
   getDomElement,
   focusTargetDomElement,
+  getBlockIdIndex,
 } from "../utils/common";
 
 const EditableBlock = ({
@@ -20,14 +25,12 @@ const EditableBlock = ({
   parentId, // 어디에서 현재 블록을 호출했는지를 체크한다, -1은 root에서 불렀단 것
   isLast, //  한 loop의 마지막 노드에는 일단 마지막일지도 모르니까 isLast를 true로 넘긴다.
   forHandle,
-  nth, // 형제노드 체크할때
 }) => {
   const dispatch = useDispatch();
   const blockInfo = useSelector((state) => getCurrentBlockInfo(state, blockId));
   const ref = useRef();
-
   const [blockValue, setBlockValue] = useState(blockInfo.contents);
-  const { pageId, lastAction, setLastAction, getOrderedList } =
+  const { pageId, lastAction, setLastAction, orderedList } =
     useContext(MainStore);
 
   useEffect(() => {
@@ -52,22 +55,24 @@ const EditableBlock = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blockInfo.blocks]);
 
-  const handleEnter = (e, pageId, blockId, nth) => {
+  const handleEnter = (e, pageId, blockId) => {
     e.preventDefault();
 
     const target = getDomElement(blockId);
     const itsParent = +target.dataset.parentId; // 나의 부모 id
-    // blockId : 나의 id
 
-    // 나한테 형제가 있는지 거기로 이동
-    // 없으면 enter해서 새로운 블럭 생성
-    if (getOrderedList[blockId].length > 0) {
+    // blockId : 나의 id
+    const nth = getBlockIdIndex(orderedList[itsParent], blockId);
+
+    // // 나한테 형제가 있는지 거기로 이동
+    // // 없으면 enter해서 새로운 블럭 생성
+    if (orderedList[blockId].length > 0) {
       // 내 id밑에 subBlock이 있으면 거기로 이동
-      const focusTarget = getDomElement(getOrderedList[blockId][0]);
+      const focusTarget = getDomElement(orderedList[blockId][0]);
       focusTargetDomElement(focusTarget);
-    } else if (nth < getOrderedList[itsParent].length - 1) {
+    } else if (nth < orderedList[itsParent].length - 1) {
       // 내가 지금 마지막 형제 노드가 아닌것을 확인
-      const focusTarget = getDomElement(getOrderedList[itsParent][nth + 1]);
+      const focusTarget = getDomElement(orderedList[itsParent][nth + 1]);
       focusTargetDomElement(focusTarget);
     } else {
       console.log("끝까지 다 들어온것, subBlock도 형제 노드도 없다");
@@ -76,7 +81,7 @@ const EditableBlock = ({
     setLastAction({ action: "Enter" });
   };
 
-  const handleTab = (e, pageId, blockId, depth, nth) => {
+  const handleTab = (e, pageId, blockId, depth) => {
     e.preventDefault();
     if (depth > 3) {
       console.log("no more tab", depth);
@@ -85,11 +90,11 @@ const EditableBlock = ({
 
     const target = getDomElement(blockId);
     const itsParent = +target.dataset.parentId; // 나의 부모 id
-
+    const nth = getBlockIdIndex(orderedList[itsParent], blockId);
     // 이전 형제노드가 있을때만 가능하다
     // 있으면 갖다 옮긴다.
     if (nth > 0) {
-      const previousSiblingId = getOrderedList[itsParent][nth - 1];
+      const previousSiblingId = orderedList[itsParent][nth - 1];
       // // // 현재 pageId, 옮길대상, 현재의 blockId, 현재의 parentId,
       dispatch(addTab(pageId, previousSiblingId, blockId, itsParent));
       setLastAction({ action: "Tab" });
@@ -98,11 +103,11 @@ const EditableBlock = ({
     }
   };
 
-  const onKeyDownHandler = (e, pageId, blockId, depth, nth) => {
+  const onKeyDownHandler = (e, pageId, blockId, depth) => {
     if (e.key === "Enter") {
-      handleEnter(e, pageId, blockId, nth);
+      handleEnter(e, pageId, blockId);
     } else if (e.key === "Tab") {
-      handleTab(e, pageId, blockId, depth, nth);
+      handleTab(e, pageId, blockId, depth);
     }
   };
 
@@ -120,7 +125,9 @@ const EditableBlock = ({
           html={blockValue}
           disabled={false}
           onChange={(e) => setBlockValue(e.target.value)}
-          onKeyDown={(e) => onKeyDownHandler(e, pageId, blockId, depth, nth)}
+          onKeyDown={(e) => {
+            onKeyDownHandler(e, pageId, blockId, depth);
+          }}
           onBlur={(e) => onBlurHandler(e)}
           className={`w-full p-2 rounded-md hover:bg-gray-200`}
           tabIndex="-1"
@@ -168,7 +175,6 @@ const EditableBlock = ({
                             isLast === true &&
                             index === blockInfo.blocks.length - 1
                           } // 마지막일지도 모르는 중에서도 마지막인것들한테만 true를 넘겨준다
-                          nth={index} // 형제노드 체크할때
                           forHandle={{ ...provided.dragHandleProps }}
                         />
                       </div>

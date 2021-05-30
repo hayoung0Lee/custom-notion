@@ -15,8 +15,8 @@ const Main = ({ pageId }) => {
   });
 
   const rootBlock = useSelector((state) => getRootBlocks(state, pageId));
-  const getOrderedList = useSelector((state) => getBlockOrder(state, pageId));
-  console.log("getOrderedList", getOrderedList);
+  const orderedList = useSelector((state) => getBlockOrder(state, pageId));
+
   const dispatch = useDispatch();
 
   const onDragEnd = (result) => {
@@ -32,7 +32,6 @@ const Main = ({ pageId }) => {
 
     const ids = result.draggableId.split("_");
     const parentId = +ids[0];
-    // const currentID = +ids[1];
     const sourceIndex = result.source.index;
     const destinationIndex = result.destination.index;
     dispatch(updateOrder(pageId, parentId, sourceIndex, destinationIndex));
@@ -44,7 +43,7 @@ const Main = ({ pageId }) => {
         pageId: pageId,
         lastAction: lastAction,
         setLastAction: setLastAction,
-        getOrderedList: getOrderedList,
+        orderedList: orderedList,
       }}
     >
       <DragDropContext onDragEnd={onDragEnd}>
@@ -78,7 +77,6 @@ const Main = ({ pageId }) => {
                           blockId={blockId} // 현재의 blockId
                           parentId={-1} // -1은 root에서 호출했다는 뜻
                           isLast={index === rootBlock.length - 1} // 한 loop의 마지막 노드에는 일단 마지막일지도 모르니까 isLast를 true로 넘긴다.
-                          nth={index} // 형제노드 체크할때
                           forHandle={{ ...provided.dragHandleProps }}
                         />
                       </div>

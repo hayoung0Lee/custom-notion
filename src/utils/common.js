@@ -21,3 +21,12 @@ export const focusTargetDomElement = (target) => {
     console.error(`focusing error: ${e.message}`);
   }
 };
+
+export const getBlockIdIndex = (array, value) => {
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] === value) {
+      return i;
+    }
+  }
+  return 0;
+};
