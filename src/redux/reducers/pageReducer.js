@@ -5,6 +5,7 @@ import {
   ADD_BLOCK,
   TAB_BLOCK,
   REORDER_BLOCK,
+  REMOVE_BLOCK,
 } from "../actionTypes";
 
 const initialState = {
@@ -89,6 +90,25 @@ const pageReducer = (state = initialState, action) => {
             [pageId]: {
               ...state.pageById[pageId],
               blocks: newOrder,
+            },
+          },
+        };
+      } else {
+        return state;
+      }
+    }
+    case REMOVE_BLOCK: {
+      const { pageId, parentId, blockId } = action.payload;
+      if (parentId === -1) {
+        return {
+          ...state,
+          pageById: {
+            ...state.pageById,
+            [pageId]: {
+              ...state.pageById[pageId],
+              blocks: state.pageById[pageId].blocks.filter(
+                (b) => b !== blockId
+              ),
             },
           },
         };

@@ -143,6 +143,25 @@ const blockReducer = (state = initialState, action) => {
         };
       }
     }
+    case REMOVE_BLOCK: {
+      const { pageId, parentId, blockId } = action.payload;
+      if (parentId === -1) {
+        return state;
+      } else {
+        return {
+          ...state,
+          blockById: {
+            ...state.blockById,
+            [parentId]: {
+              ...state.blockById[parentId],
+              blocks: state.blockById[parentId].blocks.filter(
+                (b) => b !== blockId
+              ),
+            },
+          },
+        };
+      }
+    }
     default:
       return state;
   }

@@ -4,7 +4,6 @@ import {
   EDIT_PAGE,
   ADD_BLOCK,
   REMOVE_BLOCK,
-  EDIT_BLOCk,
   EDIT_BLOCK,
   TAB_BLOCK,
   REORDER_BLOCK,
@@ -56,5 +55,14 @@ export const updateOrder = (
     parentId,
     sourceIndex,
     destinationIndex,
+  },
+});
+
+export const deleteBlock = (pageId, parentId, blockId) => ({
+  type: REMOVE_BLOCK,
+  payload: {
+    pageId,
+    parentId,
+    blockId,
   },
 });

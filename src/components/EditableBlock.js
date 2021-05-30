@@ -7,8 +7,7 @@ import {
   getBlockOrder,
 } from "../redux/selectors";
 import { updateCurrentBlock } from "../redux/actions";
-import { addTab } from "../redux/actions";
-import { addBlock } from "../redux/actions";
+import { addTab, addBlock, deleteBlock } from "../redux/actions";
 import MainStore from "../utils/store";
 import Dot from "../dot.svg";
 import { Droppable, Draggable } from "react-beautiful-dnd";
@@ -123,13 +122,42 @@ const EditableBlock = ({
     }
   };
 
+  const handleDelete = (e, pageId, blockId) => {
+    const target = getDomElement(blockId);
+    const parentId = +target.dataset.parentId; // 나의 부모 id
+
+    const nth = getBlockIdIndex(orderedList[parentId], blockId);
+
+    // 뒤의 형제가 있으면 거기로 focus, 아니면 앞의 요소에 focus
+    if (
+      orderedList[parentId].length > 0 &&
+      nth < orderedList[parentId].length - 1
+    ) {
+      const focusTarget = getDomElement(orderedList[parentId][nth + 1]);
+      focusTargetDomElement(focusTarget);
+    } else {
+      const prev = getBlockIdIndex(ordersFromTopToDown, blockId) - 1;
+      if (prev >= 0) {
+        const focusTarget = getDomElement(ordersFromTopToDown[prev]);
+        focusTargetDomElement(focusTarget);
+      }
+    }
+
+    dispatch(deleteBlock(pageId, parentId, blockId));
+    setLastAction({ action: "Delete" });
+    // 그다음 원소에 focus
+  };
+
   const onKeyDownHandler = (e, pageId, blockId, depth) => {
+    console.log(e);
     if (e.key === "Enter") {
       handleEnter(e, pageId, blockId);
     } else if (e.key === "Tab") {
       handleTab(e, pageId, blockId, depth);
     } else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
       handleArrow(e, blockId);
+    } else if (e.key === "Backspace") {
+      handleDelete(e, pageId, blockId);
     }
   };
 
